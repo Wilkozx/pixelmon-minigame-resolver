@@ -1,16 +1,19 @@
 import os
 import pymongo 
 from dotenv import load_dotenv
+from dotenv import set_key
 
 from tkinter import *
 from tkinter import ttk
 from tkinter import Listbox
+from tkinter import filedialog
 
 # Load environement variables
 load_dotenv()
 
 # Set Environmental Variables
 MONGO_STRING = os.getenv("MONGODBCONNECTIONSTRING")
+LOGFILE = os.getenv("LOGFILE")
 
 # Connect to MongoDB
 client = pymongo.MongoClient(MONGO_STRING)
@@ -27,6 +30,19 @@ root.resizable(False, False)
 
 # Set the minimum size of the window (in our case the size in general)
 root.minsize(500, 500)
+
+def browseFiles():
+    filename = filedialog.askopenfilename(initialdir = "/", title = "Select a File", filetypes = (("Log files", "*.log*"), ("all files", "*.*")))
+    set_key(".env", "LOGFILE", filename)
+    txtFilePath.config(text="Current File Path: " + filename)
+
+# Add a button to change filepath of logs
+btnChangeFilePath = Button(root, text="Change File Path", command=browseFiles)
+btnChangeFilePath.grid(column=0, row=0)
+
+txtFilePath = Label(root, text="Current File Path: " + LOGFILE, font=('Helvetica', 8))
+txtFilePath.grid(column=1, row=0)
+
 
 # Set the database and collection
 mydb = client["pixelmondb"]
