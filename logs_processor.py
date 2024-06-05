@@ -13,6 +13,7 @@ load_dotenv()
 # Set Environmental Variables
 MONGO_STRING = os.getenv("MONGODBCONNECTIONSTRING")
 GROQ_KEY = os.getenv("GROQ_API_KEY")
+LOGFILE = os.getenv("LOGFILE")
 
 # Connect to MongoDB
 mongo = pymongo.MongoClient(MONGO_STRING)
@@ -67,3 +68,19 @@ testentry = {
 x = mycol.insert_one(testentry)
 
 print(mongo.list_database_names())
+
+def follow(thefile):
+    thefile.seek(0, os.SEEK_END)
+    while True:
+        line = thefile.readline()
+        if not line:
+            continue
+        yield line
+
+file = open(LOGFILE, "r")
+file_line = follow(file)
+
+for line in file_line:
+    print(line)
+
+
