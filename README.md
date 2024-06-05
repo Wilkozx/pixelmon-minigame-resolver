@@ -1,0 +1,2 @@
+# pixelmon-minigame-resolver
+ 
