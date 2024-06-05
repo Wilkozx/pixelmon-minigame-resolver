@@ -8,6 +8,8 @@ from tkinter import ttk
 from tkinter import Listbox
 from tkinter import filedialog
 
+import subprocess
+
 # Load environement variables
 load_dotenv()
 
@@ -21,6 +23,9 @@ client = pymongo.MongoClient(MONGO_STRING)
 # Create a onclick event for the frame to get us the frame that is clicked 
 def onClick(event):
     print(event.widget.__name__)
+    
+# Start the logs processor as a subprocess
+process = subprocess.Popen(["python", "logs_processor.py"])
 
 # Create a new window
 root = Tk()
@@ -31,10 +36,16 @@ root.resizable(False, False)
 # Set the minimum size of the window (in our case the size in general)
 root.minsize(500, 500)
 
+# Instructions for the filepath button to get ur log file!
 def browseFiles():
     filename = filedialog.askopenfilename(initialdir = "/", title = "Select a File", filetypes = (("Log files", "*.log*"), ("all files", "*.*")))
     set_key(".env", "LOGFILE", filename)
     txtFilePath.config(text="Current File Path: " + filename)
+
+# Instructions for when the user closes the window
+def closed_window():
+    process.terminate()
+    root.destroy()
 
 # Add a button to change filepath of logs
 btnChangeFilePath = Button(root, text="Change File Path", command=browseFiles)
@@ -42,7 +53,6 @@ btnChangeFilePath.grid(column=0, row=0)
 
 txtFilePath = Label(root, text="Current File Path: " + LOGFILE, font=('Helvetica', 8))
 txtFilePath.grid(column=1, row=0)
-
 
 # Set the database and collection
 mydb = client["pixelmondb"]
@@ -70,7 +80,10 @@ txtAnswer.grid(column=3, row=1, padx=100, pady=10)
 txtTimeStamp = Label(frame, text="5 Mins Ago", font=('Helvetica', 8), bg="#333333", fg="#ffffff")
 txtTimeStamp.grid(column=2, row=2)
 
+root.protocol("WM_DELETE_WINDOW", closed_window)
 root.mainloop()
+
+
 
 
 
