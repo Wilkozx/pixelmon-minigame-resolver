@@ -42,7 +42,7 @@ frame.grid(columnspan=3, rowspan=1)
 
 frame.bind("<Button>", onClick)
 
-lblMessage = Label(frame, text="Resolved To", font=('Helvetica', 8), justify=LEFT, bg="#333333", fg="#ffffff")
+lblMessage = Label(frame, text="Resolved", font=('Helvetica', 8), justify=LEFT, bg="#333333", fg="#00FF00")
 lblMessage.grid(column=2, row=0)
 
 txtScramble = Label(frame, text="Etpig", font=('Helvetica', 24), bg="#333333", fg="#ffffff")
